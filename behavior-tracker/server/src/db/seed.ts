@@ -94,7 +94,7 @@ async function seed() {
         const incidentCount = Math.floor(Math.random() * 4);
 
         for (let i = 0; i < incidentCount; i++) {
-          const client = clients.rows[Math.floor(Math.random() * clients.rows.length)];
+          const selectedClient = clients.rows[Math.floor(Math.random() * clients.rows.length)];
           const behavior = behaviors.rows[Math.floor(Math.random() * behaviors.rows.length)];
 
           // Random time during the day
@@ -110,7 +110,7 @@ async function seed() {
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
             [
               orgId,
-              client.id,
+              selectedClient.id,
               staffUser.id,
               behavior.id,
               Math.floor(Math.random() * 5) + 1, // intensity 1-5

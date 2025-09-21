@@ -2,7 +2,7 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import jwt from '@fastify/jwt';
 import cookie from '@fastify/cookie';
-import { authMiddleware } from './middleware/auth';
+import { authenticate } from './middleware/auth';
 import authRoutes from './routes/auth';
 import clientRoutes from './routes/clients';
 import behaviorRoutes from './routes/behaviors';
@@ -40,7 +40,7 @@ async function start() {
       }
     });
 
-    server.decorate('authenticate', authMiddleware);
+    server.decorate('authenticate', authenticate);
 
     await server.register(authRoutes, { prefix: '/auth' });
     await server.register(clientRoutes, { prefix: '/clients' });

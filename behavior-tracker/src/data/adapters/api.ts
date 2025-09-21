@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from 'axios';
-import { User, Client, Behavior, LogEntry, Organization, FilterOptions, AuditLog } from '../types';
+import axios, { type AxiosInstance } from 'axios';
+import type { User, Client, Behavior, LogEntry, Organization, FilterOptions, AuditLog } from '../types';
 
 class ApiAdapter {
   private api: AxiosInstance;

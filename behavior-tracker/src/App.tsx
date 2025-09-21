@@ -4,6 +4,7 @@ import { router } from './app/routes';
 import './styles/globals.css';
 
 function App() {
+  console.log('App component rendering...');
   return (
     <AppProvider>
       <RouterProvider router={router} />

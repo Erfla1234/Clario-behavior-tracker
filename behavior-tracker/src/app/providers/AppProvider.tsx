@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthContext, User, Organization } from '../../data/types';
+import type { AuthContext } from '../../data/types';
 import { authUtils } from '../../lib/auth';
-import { mockAdapter } from '../../data/adapters/mock';
+import { apiAdapter } from '../../data/adapters/api';
 
 const AuthContextProvider = createContext<{
   auth: AuthContext | null;
@@ -28,19 +28,28 @@ const queryClient = new QueryClient({
 });
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  console.log('AppProvider rendering...');
   const [auth, setAuth] = useState<AuthContext | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const stored = authUtils.getAuth();
-    if (stored) {
-      setAuth(stored);
+    console.log('AppProvider useEffect running...');
+    try {
+      const stored = authUtils.getAuth();
+      if (stored) {
+        setAuth(stored);
+        console.log('Found stored auth');
+      } else {
+        console.log('No stored auth found');
+      }
+    } catch (error) {
+      console.error('Error loading auth:', error);
     }
     setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
-    const result = await mockAdapter.auth.login(email, password);
+    const result = await apiAdapter.auth.login(email, password);
     const authContext: AuthContext = {
       user: result.user,
       org: result.org,
@@ -51,7 +60,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    await mockAdapter.auth.logout();
+    await apiAdapter.auth.logout();
     authUtils.clearAuth();
     setAuth(null);
   };

@@ -122,10 +122,10 @@ export const mockAdapter = {
         filtered = filtered.filter(l => l.behavior_id === filters.behavior_id);
       }
       if (filters?.date_from) {
-        filtered = filtered.filter(l => l.timestamp >= filters.date_from);
+        filtered = filtered.filter(l => l.timestamp >= filters.date_from!);
       }
       if (filters?.date_to) {
-        filtered = filtered.filter(l => l.timestamp <= filters.date_to);
+        filtered = filtered.filter(l => l.timestamp <= filters.date_to!);
       }
 
       return filtered;

@@ -1,4 +1,4 @@
-import { AuthContext } from '../data/types';
+import type { AuthContext } from '../data/types';
 
 const AUTH_KEY = 'behavior_tracker_auth';
 

@@ -9,6 +9,8 @@ import behaviorRoutes from './routes/behaviors';
 import logRoutes from './routes/logs';
 import reportRoutes from './routes/reports';
 import auditRoutes from './routes/audit';
+import commentRoutes from './routes/comments';
+import announcementRoutes from './routes/announcements';
 
 const server = Fastify({
   logger: {
@@ -48,6 +50,8 @@ async function start() {
     await server.register(logRoutes, { prefix: '/logs' });
     await server.register(reportRoutes, { prefix: '/reports' });
     await server.register(auditRoutes, { prefix: '/audit' });
+    await server.register(commentRoutes, { prefix: '/comments' });
+    await server.register(announcementRoutes, { prefix: '/announcements' });
 
     server.get('/health', async () => {
       return { status: 'ok', timestamp: new Date().toISOString() };

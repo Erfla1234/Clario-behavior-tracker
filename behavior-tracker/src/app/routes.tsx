@@ -6,6 +6,8 @@ const Login = lazy(() => import('../pages/Login').then(m => ({ default: m.Login 
 const Log = lazy(() => import('../pages/Log').then(m => ({ default: m.Log })));
 const History = lazy(() => import('../pages/History').then(m => ({ default: m.History })));
 const Reports = lazy(() => import('../pages/Reports').then(m => ({ default: m.Reports })));
+const TodayActivity = lazy(() => import('../pages/TodayActivity').then(m => ({ default: m.TodayActivity })));
+const BulletinBoard = lazy(() => import('../pages/BulletinBoard').then(m => ({ default: m.BulletinBoard })));
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { auth, isLoading } = useAuth();
@@ -60,6 +62,26 @@ export const router = createBrowserRouter([
       <Suspense fallback={<div className="loading">Loading...</div>}>
         <ProtectedRoute>
           <Reports />
+        </ProtectedRoute>
+      </Suspense>
+    )
+  },
+  {
+    path: '/today',
+    element: (
+      <Suspense fallback={<div className="loading">Loading...</div>}>
+        <ProtectedRoute>
+          <TodayActivity />
+        </ProtectedRoute>
+      </Suspense>
+    )
+  },
+  {
+    path: '/bulletin',
+    element: (
+      <Suspense fallback={<div className="loading">Loading...</div>}>
+        <ProtectedRoute>
+          <BulletinBoard />
         </ProtectedRoute>
       </Suspense>
     )

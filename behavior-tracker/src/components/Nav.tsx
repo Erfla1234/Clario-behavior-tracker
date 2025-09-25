@@ -53,6 +53,13 @@ export function Nav() {
       description: 'Create and view shift handoff reports'
     },
     {
+      path: '/incidents',
+      label: 'Incident Reports',
+      icon: '📋',
+      roles: ['staff', 'supervisor'],
+      description: 'Create detailed incident reports with auto-fill'
+    },
+    {
       path: '/goals',
       label: 'Goals',
       icon: '🎯',

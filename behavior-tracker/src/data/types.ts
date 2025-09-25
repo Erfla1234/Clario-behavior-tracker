@@ -124,3 +124,57 @@ export interface ClientUpdate {
   follow_up_required: boolean;
   priority: 'low' | 'medium' | 'high' | 'urgent';
 }
+
+export interface IncidentReport {
+  id: string;
+  org_id: string;
+  report_number: string;
+  client_code: string;
+  client_name: string;
+  incident_date: string;
+  incident_time: string;
+  reporter_name: string;
+  reporter_role: string;
+
+  // Auto-filled from behavior logs
+  related_log_ids: string[];
+  behaviors_involved: string[];
+  total_duration: number;
+  max_intensity: number;
+
+  // Incident details
+  location: string;
+  witnesses: string[];
+  injuries: boolean;
+  injury_details?: string;
+  property_damage: boolean;
+  property_damage_details?: string;
+
+  // Narrative sections
+  antecedent_description: string;
+  behavior_description: string;
+  consequence_description: string;
+
+  // Interventions and outcomes
+  interventions_used: string[];
+  intervention_effectiveness: 'very_effective' | 'effective' | 'somewhat_effective' | 'not_effective';
+
+  // Follow-up actions
+  immediate_actions_taken: string[];
+  follow_up_required: boolean;
+  follow_up_actions: string[];
+
+  // Notifications
+  supervisor_notified: boolean;
+  supervisor_notified_time?: string;
+  family_notified: boolean;
+  family_notified_time?: string;
+  other_notifications: string[];
+
+  // Administrative
+  created_at: string;
+  created_by: string;
+  reviewed_by?: string;
+  reviewed_at?: string;
+  status: 'draft' | 'submitted' | 'reviewed' | 'approved';
+}

@@ -1191,3 +1191,350 @@ body {
     text-align: center;
   }
 }
+
+/* Incident Report Styles */
+.reports-actions {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.incident-report-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+}
+
+.form-header h2 {
+  margin: 0;
+  color: var(--text);
+}
+
+.close-form {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-light);
+  padding: 0.25rem;
+}
+
+.close-form:hover {
+  color: var(--text);
+}
+
+.auto-fill-section {
+  padding: 1.5rem;
+  background: #f0f9ff;
+  border-bottom: 1px solid var(--border);
+}
+
+.auto-fill-section h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auto-fill-section p {
+  margin: 0 0 1rem 0;
+  color: var(--text-light);
+}
+
+.log-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.log-option {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 1rem;
+  transition: all 0.2s;
+}
+
+.log-option:hover {
+  border-color: var(--primary);
+}
+
+.log-option label {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.log-option input[type="checkbox"] {
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.log-details {
+  flex: 1;
+}
+
+.log-details strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--text);
+}
+
+.log-meta {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.log-preview {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.incident-report-form form {
+  padding: 1.5rem;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.form-section h4 {
+  margin: 0 0 1rem 0;
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.auto-fill-summary {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.auto-fill-summary strong {
+  color: #065f46;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.auto-fill-summary ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #047857;
+}
+
+.auto-fill-summary li {
+  margin-bottom: 0.25rem;
+}
+
+.intervention-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.checkbox-option:hover {
+  background: #eff6ff;
+  border-color: var(--primary);
+}
+
+.checkbox-option input {
+  margin: 0;
+}
+
+.reports-list {
+  margin-top: 2rem;
+}
+
+.reports-list h2 {
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.reports-table {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 120px 150px 100px 100px 200px 150px;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 120px 150px 100px 100px 200px 150px;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.2s;
+  align-items: center;
+}
+
+.table-row:hover {
+  background: var(--background);
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.report-number {
+  font-weight: 600;
+  color: var(--primary);
+  font-family: monospace;
+}
+
+.client-info strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.client-code {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  font-family: monospace;
+}
+
+.incident-date {
+  font-weight: 500;
+}
+
+.incident-time {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  margin-top: 0.25rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.behaviors-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.behavior-tag {
+  background: var(--primary);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.more-behaviors {
+  color: var(--text-light);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.report-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.report-actions .btn-link {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Responsive design for reports table */
+@media (max-width: 1024px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .table-header {
+    display: none; /* Hide header on mobile, use cards instead */
+  }
+
+  .table-row {
+    display: block;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+  }
+
+  .table-row > div {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .table-row > div::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-light);
+    font-size: 0.875rem;
+  }
+
+  .report-number::before { content: 'Report: '; }
+  .client-info::before { content: 'Client: '; }
+  .incident-date::before { content: 'Date: '; }
+  .status-badge::before { content: 'Status: '; }
+  .behaviors-list::before { content: 'Behaviors: '; }
+  .report-actions::before { content: 'Actions: '; }
+}

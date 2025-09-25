@@ -127,6 +127,15 @@ export const mockAdapter = {
       if (filters?.date_to) {
         filtered = filtered.filter(l => l.timestamp <= filters.date_to!);
       }
+      if (filters?.incident !== undefined) {
+        filtered = filtered.filter(l => l.incident === filters.incident);
+      }
+      if (filters?.min_intensity !== undefined) {
+        filtered = filtered.filter(l => l.intensity >= filters.min_intensity!);
+      }
+      if (filters?.max_intensity !== undefined) {
+        filtered = filtered.filter(l => l.intensity <= filters.max_intensity!);
+      }
 
       return filtered;
     }

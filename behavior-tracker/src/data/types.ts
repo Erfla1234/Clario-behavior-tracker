@@ -65,4 +65,7 @@ export interface FilterOptions {
   date_from?: string;
   date_to?: string;
   staff_id?: string;
+  incident?: boolean;
+  min_intensity?: number;
+  max_intensity?: number;
 }

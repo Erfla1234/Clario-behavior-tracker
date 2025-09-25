@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
+import { format, subDays, startOfDay, endOfDay } from 'date-fns';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer
@@ -80,6 +80,82 @@ export function Reports() {
     pdfUtils.downloadPDF(pdf, `behavior-report-${format(new Date(), 'yyyy-MM-dd')}.pdf`);
   };
 
+  // Export presets for quick exports
+  const exportPresets = useMemo(() => [
+    {
+      id: 'today-csv',
+      label: 'Today (CSV)',
+      icon: '📅',
+      type: 'csv',
+      filters: {
+        date_from: format(startOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss'Z'"),
+        date_to: format(endOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss'Z'")
+      },
+      filename: `today-report-${format(new Date(), 'yyyy-MM-dd')}.csv`
+    },
+    {
+      id: 'week-pdf',
+      label: '7 Days (PDF)',
+      icon: '📊',
+      type: 'pdf',
+      filters: {
+        date_from: format(startOfDay(subDays(new Date(), 7)), "yyyy-MM-dd'T'HH:mm:ss'Z'"),
+        date_to: format(endOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss'Z'")
+      },
+      filename: `weekly-report-${format(new Date(), 'yyyy-MM-dd')}.pdf`
+    },
+    {
+      id: 'incidents-csv',
+      label: 'Incidents (CSV)',
+      icon: '⚠️',
+      type: 'csv',
+      filters: { incident: true },
+      filename: `incidents-report-${format(new Date(), 'yyyy-MM-dd')}.csv`
+    },
+    {
+      id: 'month-pdf',
+      label: '30 Days (PDF)',
+      icon: '📈',
+      type: 'pdf',
+      filters: {
+        date_from: format(startOfDay(subDays(new Date(), 30)), "yyyy-MM-dd'T'HH:mm:ss'Z'"),
+        date_to: format(endOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss'Z'")
+      },
+      filename: `monthly-report-${format(new Date(), 'yyyy-MM-dd')}.pdf`
+    }
+  ], []);
+
+  const quickExport = async (preset: typeof exportPresets[0]) => {
+    if (!auth) return;
+
+    // Fetch filtered data for this preset
+    const presetLogs = await mockAdapter.logs.list(preset.filters);
+
+    const metadata = {
+      org_name: auth.org?.name,
+      date_from: preset.filters.date_from,
+      date_to: preset.filters.date_to,
+      user_name: auth.user?.display_name,
+      user_role: auth.user?.role,
+      preset_name: preset.label
+    };
+
+    if (preset.type === 'csv') {
+      const csv = csvUtils.exportLogs(presetLogs, clients || [], behaviors || [], metadata);
+      csvUtils.downloadCSV(csv, preset.filename);
+    } else {
+      const presetReportData = await mockAdapter.reports.generate(preset.filters);
+      const pdf = pdfUtils.generateReport(
+        presetLogs,
+        clients || [],
+        behaviors || [],
+        presetReportData,
+        metadata
+      );
+      pdfUtils.downloadPDF(pdf, preset.filename);
+    }
+  };
+
   const prepareChartData = () => {
     if (!reportData) return [];
 
@@ -112,31 +188,64 @@ export function Reports() {
           <p>View analytics and export data</p>
         </div>
 
-        <div className="filters-panel">
-          <div className="filter-group">
-            <label>Client</label>
-            <select
-              value={filters.client_code || ''}
-              onChange={(e) => handleFilterChange('client_code', e.target.value)}
-            >
-              <option value="">All Clients</option>
-              {clients?.map(client => (
-                <option key={client.id} value={client.client_code}>
-                  {client.client_code} - {client.display_name}
-                </option>
+        {/* Quick Export Presets */}
+        {canExport && (
+          <div className="quick-exports">
+            <div className="quick-exports-header">
+              <h3>Quick Exports</h3>
+              <p>One-tap exports with common filters</p>
+            </div>
+            <div className="export-presets">
+              {exportPresets.map(preset => (
+                <button
+                  key={preset.id}
+                  className="export-preset"
+                  onClick={() => quickExport(preset)}
+                  title={`Export ${preset.label}`}
+                >
+                  <span className="preset-icon">{preset.icon}</span>
+                  <span className="preset-label">{preset.label}</span>
+                  <span className="preset-type">{preset.type.toUpperCase()}</span>
+                </button>
               ))}
-            </select>
+            </div>
+          </div>
+        )}
+
+        {/* Custom Filters */}
+        <div className="filters-panel">
+          <div className="filters-header">
+            <h3>Custom Export</h3>
+            <p>Apply specific filters and export</p>
           </div>
 
-          <div className="filter-group">
-            <label>Date Range</label>
-            <div className="date-range">
+          <div className="filters-grid">
+            <div className="filter-group">
+              <label>Client</label>
+              <select
+                value={filters.client_code || ''}
+                onChange={(e) => handleFilterChange('client_code', e.target.value)}
+              >
+                <option value="">All Clients</option>
+                {clients?.map(client => (
+                  <option key={client.id} value={client.client_code}>
+                    {client.client_code} - {client.display_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>From Date</label>
               <input
                 type="date"
                 value={filters.date_from?.split('T')[0] || ''}
                 onChange={(e) => handleFilterChange('date_from', e.target.value ? e.target.value + 'T00:00:00Z' : '')}
               />
-              <span>to</span>
+            </div>
+
+            <div className="filter-group">
+              <label>To Date</label>
               <input
                 type="date"
                 value={filters.date_to?.split('T')[0] || ''}
@@ -148,9 +257,11 @@ export function Reports() {
           {canExport && (
             <div className="export-buttons">
               <button className="btn-secondary" onClick={exportCSV}>
+                <span>📄</span>
                 Export CSV
               </button>
               <button className="btn-secondary" onClick={exportPDF}>
+                <span>📋</span>
                 Export PDF
               </button>
             </div>

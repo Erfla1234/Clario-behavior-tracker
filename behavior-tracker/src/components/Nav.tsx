@@ -2,41 +2,111 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../app/providers/AppProvider';
 import { RoleBadge } from './RoleBadge';
 
+interface NavLink {
+  path: string;
+  label: string;
+  icon?: string;
+  roles: string[];
+  description?: string;
+}
+
 export function Nav() {
   const { auth, logout } = useAuth();
   const location = useLocation();
 
   if (!auth?.user) return null;
 
-  const links = [
-    { path: '/log', label: 'Log Entry' },
-    { path: '/history', label: 'History' },
-    { path: '/reports', label: 'Reports' }
+  const allLinks: NavLink[] = [
+    {
+      path: '/log',
+      label: 'Log Behavior',
+      icon: '📝',
+      roles: ['staff', 'supervisor'],
+      description: 'Record new behavior observations'
+    },
+    {
+      path: '/today',
+      label: "Today's Activity",
+      icon: '📋',
+      roles: ['staff', 'supervisor'],
+      description: 'View real-time activity feed'
+    },
+    {
+      path: '/history',
+      label: 'History',
+      icon: '📊',
+      roles: ['staff', 'supervisor'],
+      description: 'Browse past behavior logs'
+    },
+    {
+      path: '/bulletin',
+      label: 'Bulletin Board',
+      icon: '📢',
+      roles: ['staff', 'supervisor'],
+      description: 'Team announcements and updates'
+    },
+    {
+      path: '/reports',
+      label: 'Reports',
+      icon: '📈',
+      roles: ['supervisor'],
+      description: 'Generate and export reports'
+    }
   ];
+
+  // Filter links based on user role
+  const availableLinks = allLinks.filter(link =>
+    auth.user && link.roles.includes(auth.user.role)
+  );
+
+  const handleRestrictedAccess = () => {
+    // Show friendly message instead of harsh error
+    alert('This feature is available to supervisors only. Please contact your supervisor if you need access to reports.');
+  };
 
   return (
     <nav className="nav">
       <div className="nav-brand">
-        <span>{auth.org?.name}</span>
-        <RoleBadge role={auth.user.role} />
+        <div className="brand-info">
+          <span className="org-name">{auth.org?.name}</span>
+          <div className="user-info">
+            <RoleBadge role={auth.user.role} />
+            <span className="user-name">{auth.user.display_name}</span>
+          </div>
+        </div>
       </div>
 
       <div className="nav-links">
-        {links.map(link => (
+        {availableLinks.map(link => (
           <Link
             key={link.path}
             to={link.path}
             className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
+            title={link.description}
           >
-            {link.label}
+            <span className="nav-icon">{link.icon}</span>
+            <span className="nav-label">{link.label}</span>
           </Link>
         ))}
+
+        {/* Show restricted items with click handler for education */}
+        {auth.user.role === 'staff' && (
+          <button
+            onClick={handleRestrictedAccess}
+            className="nav-link restricted"
+            title="Supervisor access required"
+          >
+            <span className="nav-icon">📈</span>
+            <span className="nav-label">Reports</span>
+            <span className="restriction-badge">👑</span>
+          </button>
+        )}
       </div>
 
-      <div className="nav-user">
-        <span>{auth.user.display_name}</span>
-        <button onClick={logout} className="btn-secondary">
-          Logout
+      <div className="nav-actions">
+        <button onClick={logout} className="btn-logout">
+          <span>🚪</span>
+          <span>Logout</span>
         </button>
       </div>
     </nav>

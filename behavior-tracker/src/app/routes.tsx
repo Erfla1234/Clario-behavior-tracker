@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { useAuth } from './providers/AppProvider';
+import { RouteGuard } from '../components/RouteGuard';
 
 const Login = lazy(() => import('../pages/Login').then(m => ({ default: m.Login })));
 const Log = lazy(() => import('../pages/Log').then(m => ({ default: m.Log })));
@@ -60,9 +61,9 @@ export const router = createBrowserRouter([
     path: '/reports',
     element: (
       <Suspense fallback={<div className="loading">Loading...</div>}>
-        <ProtectedRoute>
+        <RouteGuard allowedRoles={['supervisor']}>
           <Reports />
-        </ProtectedRoute>
+        </RouteGuard>
       </Suspense>
     )
   },

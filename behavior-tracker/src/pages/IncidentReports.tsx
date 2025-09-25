@@ -4,6 +4,7 @@ import { Nav } from '../components/Nav';
 import { mockAdapter } from '../data/adapters/mock';
 import { IncidentReport, LogEntry } from '../data/types';
 import { format, subDays } from 'date-fns';
+import { jsPDF } from 'jspdf';
 
 interface LogEntryWithNames extends LogEntry {
   client_name: string;
@@ -218,6 +219,250 @@ export function IncidentReports() {
     );
   };
 
+  const exportToPDF = (report: IncidentReport) => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const contentWidth = pageWidth - (margin * 2);
+    let yPosition = margin;
+
+    // Header
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('INCIDENT REPORT', pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 15;
+
+    // Organization header
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${auth?.org?.name || 'Organization Name'}`, pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 10;
+    doc.text(`Report Number: ${report.report_number}`, pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 20;
+
+    // Basic Information Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('BASIC INFORMATION', margin, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    const basicInfo = [
+      `Client: ${report.client_name} (${report.client_code})`,
+      `Date: ${format(new Date(report.incident_date), 'MMMM d, yyyy')}`,
+      `Time: ${report.incident_time}`,
+      `Location: ${report.location}`,
+      `Reported by: ${report.reporter_name} (${report.reporter_role})`,
+      `Status: ${report.status.toUpperCase()}`
+    ];
+
+    basicInfo.forEach(line => {
+      doc.text(line, margin, yPosition);
+      yPosition += 6;
+    });
+    yPosition += 10;
+
+    // Behaviors Involved
+    if (report.behaviors_involved && report.behaviors_involved.length > 0) {
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('BEHAVIORS INVOLVED', margin, yPosition);
+      yPosition += 10;
+
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`• ${report.behaviors_involved.join(', ')}`, margin, yPosition);
+      yPosition += 6;
+      doc.text(`• Total Duration: ${report.total_duration} minutes`, margin, yPosition);
+      yPosition += 6;
+      doc.text(`• Maximum Intensity: ${report.max_intensity}/5`, margin, yPosition);
+      yPosition += 15;
+    }
+
+    // Incident Description
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('INCIDENT DESCRIPTION', margin, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Antecedent (What happened before):', margin, yPosition);
+    yPosition += 8;
+    doc.setFont('helvetica', 'normal');
+    const antecedentLines = doc.splitTextToSize(report.antecedent_description || 'N/A', contentWidth);
+    doc.text(antecedentLines, margin, yPosition);
+    yPosition += (antecedentLines.length * 5) + 8;
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Behavior Description:', margin, yPosition);
+    yPosition += 8;
+    doc.setFont('helvetica', 'normal');
+    const behaviorLines = doc.splitTextToSize(report.behavior_description || 'N/A', contentWidth);
+    doc.text(behaviorLines, margin, yPosition);
+    yPosition += (behaviorLines.length * 5) + 8;
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Consequence (What happened after):', margin, yPosition);
+    yPosition += 8;
+    doc.setFont('helvetica', 'normal');
+    const consequenceLines = doc.splitTextToSize(report.consequence_description || 'N/A', contentWidth);
+    doc.text(consequenceLines, margin, yPosition);
+    yPosition += (consequenceLines.length * 5) + 15;
+
+    // Check if we need a new page
+    if (yPosition > 250) {
+      doc.addPage();
+      yPosition = margin;
+    }
+
+    // Injuries and Property Damage
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('INJURIES AND PROPERTY DAMAGE', margin, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Injuries occurred: ${report.injuries ? 'YES' : 'NO'}`, margin, yPosition);
+    yPosition += 6;
+    if (report.injuries && report.injury_details) {
+      doc.text(`Injury details: ${report.injury_details}`, margin, yPosition);
+      yPosition += 6;
+    }
+    doc.text(`Property damage: ${report.property_damage ? 'YES' : 'NO'}`, margin, yPosition);
+    yPosition += 6;
+    if (report.property_damage && report.property_damage_details) {
+      doc.text(`Property damage details: ${report.property_damage_details}`, margin, yPosition);
+      yPosition += 6;
+    }
+    yPosition += 10;
+
+    // Interventions
+    if (report.interventions_used && report.interventions_used.length > 0) {
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('INTERVENTIONS USED', margin, yPosition);
+      yPosition += 10;
+
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      report.interventions_used.forEach(intervention => {
+        doc.text(`• ${intervention}`, margin, yPosition);
+        yPosition += 6;
+      });
+      doc.text(`Effectiveness: ${report.intervention_effectiveness?.replace('_', ' ').toUpperCase()}`, margin, yPosition);
+      yPosition += 15;
+    }
+
+    // Notifications
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('NOTIFICATIONS', margin, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Supervisor notified: ${report.supervisor_notified ? 'YES' : 'NO'}`, margin, yPosition);
+    if (report.supervisor_notified && report.supervisor_notified_time) {
+      doc.text(` at ${report.supervisor_notified_time}`, 80, yPosition);
+    }
+    yPosition += 6;
+
+    doc.text(`Family/Guardian notified: ${report.family_notified ? 'YES' : 'NO'}`, margin, yPosition);
+    if (report.family_notified && report.family_notified_time) {
+      doc.text(` at ${report.family_notified_time}`, 90, yPosition);
+    }
+    yPosition += 6;
+
+    if (report.other_notifications && report.other_notifications.length > 0) {
+      doc.text(`Other notifications: ${report.other_notifications.join(', ')}`, margin, yPosition);
+      yPosition += 6;
+    }
+    yPosition += 15;
+
+    // Footer
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.text(`Generated: ${format(new Date(), 'MMMM d, yyyy \'at\' h:mm a')}`, margin, yPosition);
+    doc.text(`Created by: ${report.reporter_name}`, margin, yPosition + 6);
+
+    // Signature lines
+    yPosition += 25;
+    doc.setFont('helvetica', 'normal');
+    doc.line(margin, yPosition, margin + 60, yPosition);
+    doc.text('Staff Signature', margin, yPosition + 8);
+    doc.text('Date: ___________', margin + 70, yPosition + 8);
+
+    yPosition += 20;
+    doc.line(margin, yPosition, margin + 60, yPosition);
+    doc.text('Supervisor Signature', margin, yPosition + 8);
+    doc.text('Date: ___________', margin + 70, yPosition + 8);
+
+    // Save the PDF
+    const filename = `incident-report-${report.report_number}.pdf`;
+    doc.save(filename);
+  };
+
+  const exportToCSV = (reports: IncidentReport[]) => {
+    const headers = [
+      'Report Number',
+      'Client Code',
+      'Client Name',
+      'Incident Date',
+      'Incident Time',
+      'Location',
+      'Reporter',
+      'Behaviors',
+      'Duration (min)',
+      'Max Intensity',
+      'Injuries',
+      'Property Damage',
+      'Interventions',
+      'Effectiveness',
+      'Supervisor Notified',
+      'Family Notified',
+      'Status',
+      'Created Date'
+    ];
+
+    const csvData = reports.map(report => [
+      report.report_number,
+      report.client_code,
+      report.client_name,
+      report.incident_date,
+      report.incident_time,
+      report.location,
+      report.reporter_name,
+      report.behaviors_involved?.join('; ') || '',
+      report.total_duration || '',
+      report.max_intensity || '',
+      report.injuries ? 'Yes' : 'No',
+      report.property_damage ? 'Yes' : 'No',
+      report.interventions_used?.join('; ') || '',
+      report.intervention_effectiveness || '',
+      report.supervisor_notified ? 'Yes' : 'No',
+      report.family_notified ? 'Yes' : 'No',
+      report.status,
+      format(new Date(report.created_at), 'yyyy-MM-dd HH:mm')
+    ]);
+
+    const csvContent = [headers, ...csvData]
+      .map(row => row.map(cell => `"${cell}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `incident-reports-${format(new Date(), 'yyyy-MM-dd')}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) {
     return <div className="loading">Loading incident reports...</div>;
   }
@@ -239,6 +484,18 @@ export function IncidentReports() {
           >
             + Create New Incident Report
           </button>
+
+          {reports.length > 0 && (
+            <div className="export-actions">
+              <button
+                onClick={() => exportToCSV(reports)}
+                className="btn-secondary"
+                title="Export all reports to CSV for Excel/Google Sheets"
+              >
+                📊 Export to CSV
+              </button>
+            </div>
+          )}
         </div>
 
         {/* New Report Form */}
@@ -574,7 +831,13 @@ export function IncidentReports() {
                   <div className="report-actions">
                     <button className="btn-link">View</button>
                     <button className="btn-link">Edit</button>
-                    <button className="btn-link">Export PDF</button>
+                    <button
+                      onClick={() => exportToPDF(report)}
+                      className="btn-link"
+                      title="Export this report to PDF for printing or state submission"
+                    >
+                      📄 Export PDF
+                    </button>
                   </div>
                 </div>
               ))}

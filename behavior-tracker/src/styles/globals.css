@@ -1196,7 +1196,15 @@ body {
 .reports-actions {
   margin-bottom: 2rem;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 1rem;
+}
+
+.export-actions {
+  display: flex;
+  gap: 0.5rem;
   align-items: center;
 }
 

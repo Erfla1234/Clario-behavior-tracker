@@ -60,6 +60,13 @@ export function Nav() {
       description: 'Track behavior goals and progress'
     },
     {
+      path: '/insights',
+      label: 'AI Insights',
+      icon: '🧠',
+      roles: ['supervisor'],
+      description: 'Smart behavioral analysis and recommendations'
+    },
+    {
       path: '/reports',
       label: 'Reports',
       icon: '📈',

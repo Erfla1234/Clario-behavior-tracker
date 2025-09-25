@@ -46,6 +46,13 @@ export function Nav() {
       description: 'Team announcements and updates'
     },
     {
+      path: '/goals',
+      label: 'Goals',
+      icon: '🎯',
+      roles: ['supervisor'],
+      description: 'Track behavior goals and progress'
+    },
+    {
       path: '/reports',
       label: 'Reports',
       icon: '📈',

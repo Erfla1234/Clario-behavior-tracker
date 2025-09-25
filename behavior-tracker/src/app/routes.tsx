@@ -7,6 +7,7 @@ const Login = lazy(() => import('../pages/Login').then(m => ({ default: m.Login 
 const Log = lazy(() => import('../pages/Log').then(m => ({ default: m.Log })));
 const History = lazy(() => import('../pages/History').then(m => ({ default: m.History })));
 const Reports = lazy(() => import('../pages/Reports').then(m => ({ default: m.Reports })));
+const Goals = lazy(() => import('../pages/Goals').then(m => ({ default: m.Goals })));
 const TodayActivity = lazy(() => import('../pages/TodayActivity').then(m => ({ default: m.TodayActivity })));
 const BulletinBoard = lazy(() => import('../pages/BulletinBoard').then(m => ({ default: m.BulletinBoard })));
 
@@ -54,6 +55,16 @@ export const router = createBrowserRouter([
         <ProtectedRoute>
           <History />
         </ProtectedRoute>
+      </Suspense>
+    )
+  },
+  {
+    path: '/goals',
+    element: (
+      <Suspense fallback={<div className="loading">Loading...</div>}>
+        <RouteGuard allowedRoles={['supervisor']}>
+          <Goals />
+        </RouteGuard>
       </Suspense>
     )
   },

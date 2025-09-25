@@ -152,7 +152,7 @@ export function QuickLogForm({ onSwitchToFull }: QuickLogProps) {
   };
 
   const applyTemplate = (templateId: string) => {
-    const template = templates?.find(t => t.id === templateId);
+    const template = templates?.find((t: any) => t.id === templateId);
     if (template) {
       setFormData(prev => ({
         ...prev,

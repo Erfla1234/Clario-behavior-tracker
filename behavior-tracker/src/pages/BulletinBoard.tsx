@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../app/providers/AppProvider';
 import { format } from 'date-fns';
-import { apiAdapter } from '../data/adapters/api';
+import { Nav } from '../components/Nav';
+// import { apiAdapter } from '../data/adapters/api'; // Will use when API is ready
 
 interface Announcement {
   id: string;
@@ -32,8 +33,30 @@ export function BulletinBoard() {
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await apiAdapter.api.get('/announcements');
-      setAnnouncements(response.data);
+      // For now, using mock data. Will implement when API is ready
+      const mockAnnouncements: Announcement[] = [
+        {
+          id: '1',
+          title: 'Team Meeting Tomorrow',
+          content: 'Don\'t forget about our weekly team meeting at 9 AM in the conference room.',
+          priority: 'high',
+          author_name: 'Sarah Johnson',
+          author_role: 'supervisor',
+          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          expires_at: undefined
+        },
+        {
+          id: '2',
+          title: 'New Safety Protocol',
+          content: 'Please review the updated safety protocols for managing aggressive behaviors.',
+          priority: 'urgent',
+          author_name: 'Mike Williams',
+          author_role: 'supervisor',
+          created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          expires_at: undefined
+        }
+      ];
+      setAnnouncements(mockAnnouncements);
     } catch (error) {
       console.error('Error fetching announcements:', error);
     } finally {
@@ -46,10 +69,16 @@ export function BulletinBoard() {
     if (!newAnnouncement.title.trim() || !newAnnouncement.content.trim()) return;
 
     try {
-      await apiAdapter.api.post('/announcements', {
+      // Mock implementation - in production, this would call the API
+      const newItem: Announcement = {
+        id: Date.now().toString(),
         ...newAnnouncement,
-        expires_at: newAnnouncement.expires_at || null
-      });
+        author_name: auth?.user?.display_name || 'Current User',
+        author_role: auth?.user?.role || 'staff',
+        created_at: new Date().toISOString(),
+        expires_at: newAnnouncement.expires_at || undefined
+      };
+      setAnnouncements(prev => [newItem, ...prev]);
       setNewAnnouncement({ title: '', content: '', priority: 'normal', expires_at: '' });
       setShowNewForm(false);
       fetchAnnouncements();
@@ -62,8 +91,8 @@ export function BulletinBoard() {
     if (!confirm('Are you sure you want to remove this announcement?')) return;
 
     try {
-      await apiAdapter.api.delete(`/announcements/${id}`);
-      fetchAnnouncements();
+      // Mock implementation - in production, this would call the API
+      setAnnouncements(prev => prev.filter(a => a.id !== id));
     } catch (error) {
       console.error('Error deleting announcement:', error);
     }

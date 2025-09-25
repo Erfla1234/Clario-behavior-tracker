@@ -69,3 +69,30 @@ export interface FilterOptions {
   min_intensity?: number;
   max_intensity?: number;
 }
+
+export interface BehaviorGoal {
+  id: string;
+  org_id: string;
+  client_code: string;
+  behavior_id: string;
+  goal_type: 'reduce' | 'increase' | 'maintain';
+  target_metric: 'frequency' | 'intensity' | 'duration';
+  current_value: number;
+  target_value: number;
+  target_date: string;
+  created_by: string;
+  created_at: string;
+  status: 'active' | 'achieved' | 'paused' | 'discontinued';
+  notes?: string;
+  interventions?: string[];
+}
+
+export interface GoalProgress {
+  id: string;
+  goal_id: string;
+  date: string;
+  value: number;
+  trend: 'improving' | 'stable' | 'declining';
+  notes?: string;
+  calculated_at: string;
+}

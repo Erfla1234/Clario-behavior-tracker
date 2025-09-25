@@ -1293,3 +1293,398 @@ button:focus-visible {
     width: 100%;
   }
 }
+
+/* ========== GOALS PAGE ========== */
+
+/* Goals Layout */
+.goals-filters {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.goals-layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .goals-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Goals List */
+.goals-list {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.goals-list-header {
+  padding: 20px 20px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.goals-list-header h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.no-goals {
+  padding: 60px 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.no-goals-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.no-goals p {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+
+.no-goals small {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Goal Cards */
+.goals-cards {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.goal-card {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+}
+
+.goal-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.goal-card.selected {
+  border-color: #3b82f6;
+  background: #f0f9ff;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.goal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.goal-client strong {
+  font-size: 16px;
+  color: #1f2937;
+}
+
+.client-code {
+  margin-left: 8px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.goal-status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.goal-status-active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.goal-status-urgent {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.goal-status-overdue {
+  background: #fecaca;
+  color: #dc2626;
+}
+
+.goal-behavior {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.goal-type-badge {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.goal-type-reduce {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.goal-type-increase {
+  background: #f0f9ff;
+  color: #2563eb;
+}
+
+.goal-type-maintain {
+  background: #f7fee7;
+  color: #65a30d;
+}
+
+.behavior-name {
+  font-weight: 500;
+  color: #374151;
+}
+
+.goal-target {
+  margin-bottom: 12px;
+}
+
+.target-metric {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.metric-label {
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+.current-value {
+  font-weight: 600;
+  color: #ef4444;
+}
+
+.arrow {
+  color: #9ca3af;
+}
+
+.target-value {
+  font-weight: 600;
+  color: #22c55e;
+}
+
+.goal-timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.target-date {
+  font-weight: 500;
+}
+
+.days-remaining {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* Goal Details Panel */
+.goal-details {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 24px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.goal-details-header {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goal-details-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.close-details {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-details:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.progress-overview {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.progress-circle {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.progress-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #3b82f6;
+  line-height: 1;
+}
+
+.progress-label {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.progress-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.progress-stats .stat {
+  text-align: center;
+}
+
+.progress-stats label {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.progress-stats .stat-value {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.progress-chart {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.progress-chart h4 {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.goal-interventions {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.goal-interventions h4 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.interventions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.intervention-tag {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.goal-notes {
+  padding: 20px;
+}
+
+.goal-notes h4 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.goal-notes p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .goals-layout {
+    gap: 16px;
+  }
+
+  .goal-details {
+    position: static;
+    max-height: none;
+  }
+
+  .progress-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .target-metric {
+    flex-wrap: wrap;
+  }
+
+  .interventions-list {
+    gap: 6px;
+  }
+
+  .intervention-tag {
+    font-size: 11px;
+  }
+}

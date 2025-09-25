@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../app/providers/AppProvider';
 import { format } from 'date-fns';
-import { apiAdapter } from '../data/adapters/api';
+import { Nav } from '../components/Nav';
+import { mockAdapter } from '../data/adapters/mock';
+// import { apiAdapter } from '../data/adapters/api'; // Will use when API is ready
 
 interface LogWithComments {
   id: string;
@@ -40,7 +42,7 @@ export function TodayActivity() {
   const fetchTodaysLogs = async () => {
     try {
       const today = format(new Date(), 'yyyy-MM-dd');
-      const response = await apiAdapter.logs.list({
+      const response = await mockAdapter.logs.list({
         date_from: today,
         date_to: today
       });
@@ -48,8 +50,17 @@ export function TodayActivity() {
       // Fetch comments for each log
       const logsWithComments = await Promise.all(
         response.map(async (log: any) => {
-          const comments = await apiAdapter.api.get(`/comments/log/${log.id}`);
-          return { ...log, comments: comments.data };
+          // Mock comments for now
+          return {
+            ...log,
+            comments: Math.random() > 0.7 ? [{
+              id: `comment-${log.id}`,
+              content: 'Client showed improvement during afternoon session.',
+              author_name: 'Staff Member',
+              author_role: 'staff',
+              created_at: new Date().toISOString()
+            }] : []
+          };
         })
       );
 
@@ -65,9 +76,19 @@ export function TodayActivity() {
     if (!newComment[logId]?.trim()) return;
 
     try {
-      await apiAdapter.api.post(`/comments/log/${logId}`, {
-        content: newComment[logId]
-      });
+      // Mock implementation - will integrate with API when ready
+      const updatedLog = logs.find(log => log.id === logId);
+      if (updatedLog) {
+        const comment: Comment = {
+          id: `comment-${Date.now()}`,
+          content: newComment[logId],
+          author_name: auth?.user?.display_name || 'Current User',
+          author_role: auth?.user?.role || 'staff',
+          created_at: new Date().toISOString()
+        };
+        updatedLog.comments = [...(updatedLog.comments || []), comment];
+        setLogs([...logs]);
+      }
       setNewComment({ ...newComment, [logId]: '' });
       setShowCommentBox({ ...showCommentBox, [logId]: false });
       fetchTodaysLogs(); // Refresh to show new comment
@@ -87,24 +108,7 @@ export function TodayActivity() {
 
   return (
     <div className="page-container">
-      <div className="nav">
-        <div className="nav-brand">📋 Today's Activity</div>
-        <div className="nav-links">
-          <a href="/log" className="nav-link">Log Behavior</a>
-          <a href="/today" className="nav-link active">Today's Activity</a>
-          <a href="/history" className="nav-link">History</a>
-          <a href="/bulletin" className="nav-link">Bulletin Board</a>
-          {auth?.user?.role === 'supervisor' && (
-            <a href="/reports" className="nav-link">Reports</a>
-          )}
-        </div>
-        <div className="nav-user">
-          <span className={`badge badge-${auth?.user?.role}`}>
-            {auth?.user?.role}
-          </span>
-          <span>{auth?.user?.display_name}</span>
-        </div>
-      </div>
+      <Nav />
 
       <div className="page-content">
         <div className="page-header">

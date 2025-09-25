@@ -11,6 +11,7 @@ import reportRoutes from './routes/reports';
 import auditRoutes from './routes/audit';
 import commentRoutes from './routes/comments';
 import announcementRoutes from './routes/announcements';
+import templateRoutes from './routes/templates';
 
 const server = Fastify({
   logger: {
@@ -52,6 +53,7 @@ async function start() {
     await server.register(auditRoutes, { prefix: '/audit' });
     await server.register(commentRoutes, { prefix: '/comments' });
     await server.register(announcementRoutes, { prefix: '/announcements' });
+    await server.register(templateRoutes, { prefix: '/api' });
 
     server.get('/health', async () => {
       return { status: 'ok', timestamp: new Date().toISOString() };

@@ -192,6 +192,33 @@ class ApiAdapter {
       return data;
     }
   };
+
+  templates = {
+    list: async () => {
+      const { data } = await this.api.get('/api/templates');
+      return data;
+    },
+
+    get: async (id: string) => {
+      const { data } = await this.api.get(`/api/templates/${id}`);
+      return data;
+    },
+
+    create: async (template: any) => {
+      const { data } = await this.api.post('/api/templates', template);
+      return data;
+    },
+
+    update: async (id: string, updates: any) => {
+      const { data } = await this.api.put(`/api/templates/${id}`, updates);
+      return data;
+    },
+
+    delete: async (id: string) => {
+      const { data } = await this.api.delete(`/api/templates/${id}`);
+      return data.success;
+    }
+  };
 }
 
 export const apiAdapter = new ApiAdapter();

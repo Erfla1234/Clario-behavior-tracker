@@ -46,6 +46,13 @@ export function Nav() {
       description: 'Team announcements and updates'
     },
     {
+      path: '/handoff',
+      label: 'Shift Handoff',
+      icon: '🔄',
+      roles: ['staff', 'supervisor'],
+      description: 'Create and view shift handoff reports'
+    },
+    {
       path: '/goals',
       label: 'Goals',
       icon: '🎯',

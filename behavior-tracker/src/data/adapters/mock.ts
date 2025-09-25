@@ -1,4 +1,4 @@
-import { User, Client, Behavior, LogEntry, Organization, FilterOptions, BehaviorGoal, GoalProgress } from '../types';
+import { User, Client, Behavior, LogEntry, Organization, FilterOptions, BehaviorGoal, GoalProgress, ShiftHandoff, ClientUpdate } from '../types';
 
 const mockOrg: Organization = {
   id: 'org-1',
@@ -145,6 +145,72 @@ const generateGoalProgress = (goal: BehaviorGoal): GoalProgress[] => {
 };
 
 let mockProgress: GoalProgress[] = mockGoals.flatMap(generateGoalProgress);
+
+// Mock Shift Handoffs
+const mockHandoffs: ShiftHandoff[] = [
+  {
+    id: 'handoff-1',
+    org_id: 'org-1',
+    shift_date: new Date().toISOString().split('T')[0],
+    shift_type: 'morning',
+    created_by: 'user-1',
+    created_at: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
+    staff_name: 'Sarah Johnson',
+    staff_role: 'staff',
+    summary: 'Morning shift went smoothly. JD01 had minor verbal outburst during breakfast, resolved with redirection.',
+    client_updates: [
+      {
+        client_code: 'JD01',
+        client_name: 'John D.',
+        status: 'escalated',
+        notes: 'Verbal outburst at 9:30 AM, seemed frustrated with morning routine. Used calming techniques successfully.',
+        follow_up_required: true,
+        priority: 'medium'
+      },
+      {
+        client_code: 'SM02',
+        client_name: 'Sarah M.',
+        status: 'improved',
+        notes: 'Great participation in morning activities. Completed all tasks independently.',
+        follow_up_required: false,
+        priority: 'low'
+      }
+    ],
+    critical_alerts: ['JD01 medication change - monitor for side effects', 'Fire drill scheduled at 2 PM'],
+    medications_given: ['JD01 - Morning meds at 8 AM', 'SM02 - Morning meds at 8:15 AM'],
+    next_shift_tasks: ['Complete JD01 behavior plan review', 'Prepare materials for afternoon group activity'],
+    general_notes: 'New staff member shadowing tomorrow morning. Please prepare orientation materials.',
+    acknowledged_by: ['user-2'],
+    acknowledged_at: [new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()]
+  },
+  {
+    id: 'handoff-2',
+    org_id: 'org-1',
+    shift_date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    shift_type: 'evening',
+    created_by: 'user-2',
+    created_at: new Date(Date.now() - 32 * 60 * 60 * 1000).toISOString(),
+    staff_name: 'Mike Williams',
+    staff_role: 'supervisor',
+    summary: 'Evening shift - All clients settled well. RB03 required extra support during dinner.',
+    client_updates: [
+      {
+        client_code: 'RB03',
+        client_name: 'Robert B.',
+        status: 'monitoring',
+        notes: 'Difficulty during dinner, refused to eat initially. Eventually ate after 1:1 support.',
+        follow_up_required: true,
+        priority: 'high'
+      }
+    ],
+    critical_alerts: ['RB03 showing signs of increased anxiety - monitor closely'],
+    medications_given: ['All evening medications administered on schedule'],
+    next_shift_tasks: ['Check on RB03 first thing', 'Complete incident report for dinner situation'],
+    general_notes: undefined,
+    acknowledged_by: [],
+    acknowledged_at: []
+  }
+];
 
 export const mockAdapter = {
   auth: {
@@ -330,6 +396,69 @@ export const mockAdapter = {
         isOnTrack: progressPercent >= 50,
         daysRemaining: Math.max(0, Math.ceil((new Date(goal.target_date).getTime() - Date.now()) / (24 * 60 * 60 * 1000)))
       };
+    }
+  },
+
+  handoffs: {
+    list: async (filters?: { shift_date?: string; shift_type?: string }) => {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      let filtered = [...mockHandoffs];
+
+      if (filters?.shift_date) {
+        filtered = filtered.filter(h => h.shift_date === filters.shift_date);
+      }
+      if (filters?.shift_type) {
+        filtered = filtered.filter(h => h.shift_type === filters.shift_type);
+      }
+
+      return filtered.sort((a, b) => b.created_at.localeCompare(a.created_at));
+    },
+
+    get: async (id: string) => {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      return mockHandoffs.find(h => h.id === id);
+    },
+
+    create: async (data: Omit<ShiftHandoff, 'id' | 'org_id' | 'created_at'>) => {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const newHandoff: ShiftHandoff = {
+        ...data,
+        id: `handoff-${Date.now()}`,
+        org_id: mockOrg.id,
+        created_at: new Date().toISOString(),
+        acknowledged_by: [],
+        acknowledged_at: []
+      };
+      mockHandoffs.unshift(newHandoff);
+      return newHandoff;
+    },
+
+    acknowledge: async (id: string, userId: string) => {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      const handoff = mockHandoffs.find(h => h.id === id);
+      if (!handoff) throw new Error('Handoff not found');
+
+      if (!handoff.acknowledged_by?.includes(userId)) {
+        handoff.acknowledged_by = [...(handoff.acknowledged_by || []), userId];
+        handoff.acknowledged_at = [...(handoff.acknowledged_at || []), new Date().toISOString()];
+      }
+      return handoff;
+    },
+
+    getTodaysHandoffs: async () => {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      const today = new Date().toISOString().split('T')[0];
+      return mockHandoffs.filter(h => h.shift_date === today);
+    },
+
+    getUnacknowledged: async (userId: string) => {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      const recent = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(); // Last 24 hours
+      return mockHandoffs.filter(h =>
+        h.created_at >= recent &&
+        h.created_by !== userId &&
+        (!h.acknowledged_by || !h.acknowledged_by.includes(userId))
+      );
     }
   }
 };

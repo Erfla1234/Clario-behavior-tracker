@@ -432,3 +432,438 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Shift Handoff Styles */
+.handoff-actions {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.unacknowledged-alert {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.handoff-form {
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+}
+
+.handoff-form h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.shift-type-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.shift-option {
+  padding: 0.75rem;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.shift-option:hover {
+  border-color: var(--primary);
+  background: #eff6ff;
+}
+
+.shift-option.selected {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+}
+
+.client-updates-section {
+  margin: 1.5rem 0;
+}
+
+.client-update-item {
+  background: var(--background);
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+}
+
+.client-update-header {
+  display: flex;
+  justify-content: between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.client-name {
+  font-weight: 600;
+}
+
+.remove-client {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.2rem;
+}
+
+.status-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+}
+
+.status-option {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.status-option.stable { border-color: var(--success); color: var(--success); }
+.status-option.improved { border-color: var(--success); color: var(--success); }
+.status-option.monitoring { border-color: var(--warning); color: var(--warning); }
+.status-option.escalated { border-color: var(--danger); color: var(--danger); }
+
+.status-option.selected.stable { background: var(--success); color: white; }
+.status-option.selected.improved { background: var(--success); color: white; }
+.status-option.selected.monitoring { background: var(--warning); color: white; }
+.status-option.selected.escalated { background: var(--danger); color: white; }
+
+.priority-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+}
+
+.priority-option {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.priority-option.low { border-color: #64748b; color: #64748b; }
+.priority-option.medium { border-color: var(--warning); color: var(--warning); }
+.priority-option.high { border-color: #f97316; color: #f97316; }
+.priority-option.urgent { border-color: var(--danger); color: var(--danger); }
+
+.priority-option.selected.low { background: #64748b; color: white; }
+.priority-option.selected.medium { background: var(--warning); color: white; }
+.priority-option.selected.high { background: #f97316; color: white; }
+.priority-option.selected.urgent { background: var(--danger); color: white; }
+
+.text-array-input {
+  margin: 1rem 0;
+}
+
+.array-items {
+  margin-top: 0.5rem;
+}
+
+.array-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.array-item input {
+  flex: 1;
+}
+
+.remove-item {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.2rem;
+}
+
+.add-item {
+  background: none;
+  border: 1px dashed var(--border);
+  color: var(--primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.add-item:hover {
+  background: #eff6ff;
+}
+
+.handoffs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.handoff-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.handoff-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.handoff-card.unacknowledged {
+  border-color: var(--warning);
+  background: #fffbeb;
+}
+
+.handoff-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.handoff-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shift-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.shift-badge.morning { background: #fef3c7; color: #92400e; }
+.shift-badge.afternoon { background: #fed7aa; color: #9a3412; }
+.shift-badge.evening { background: #e0e7ff; color: #3730a3; }
+.shift-badge.overnight { background: #f3f4f6; color: #374151; }
+
+.handoff-meta {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.handoff-summary {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.handoff-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.handoff-section {
+  padding: 1rem;
+  background: var(--background);
+  border-radius: 0.25rem;
+}
+
+.handoff-section h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.client-updates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.client-update-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: var(--surface);
+  border-radius: 0.25rem;
+}
+
+.client-update-summary .client-name {
+  font-weight: 500;
+}
+
+.status-indicator {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-indicator.stable { background: #dcfce7; color: #166534; }
+.status-indicator.improved { background: #dcfce7; color: #166534; }
+.status-indicator.monitoring { background: #fef3c7; color: #92400e; }
+.status-indicator.escalated { background: #fee2e2; color: #991b1b; }
+
+.priority-indicator {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.priority-indicator.low { background: #f1f5f9; color: #475569; }
+.priority-indicator.medium { background: #fef3c7; color: #92400e; }
+.priority-indicator.high { background: #fed7aa; color: #9a3412; }
+.priority-indicator.urgent { background: #fee2e2; color: #991b1b; }
+
+.list-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-items li {
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.list-items li:before {
+  content: "•";
+  margin-right: 0.5rem;
+  color: var(--primary);
+}
+
+.acknowledgment-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.acknowledgment-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.acknowledgment-status.acknowledged {
+  color: var(--success);
+}
+
+.acknowledgment-status.unacknowledged {
+  color: var(--warning);
+}
+
+.handoff-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.btn-link:hover {
+  color: var(--primary-dark);
+}
+
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger { color: var(--danger); }
+
+/* Handoff Detail Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--surface);
+  max-width: 800px;
+  max-height: 90vh;
+  width: 90%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-light);
+  padding: 0.25rem;
+}
+
+.close-modal:hover {
+  color: var(--text);
+}

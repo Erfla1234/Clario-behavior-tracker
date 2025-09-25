@@ -10,6 +10,7 @@ const Reports = lazy(() => import('../pages/Reports').then(m => ({ default: m.Re
 const Goals = lazy(() => import('../pages/Goals').then(m => ({ default: m.Goals })));
 const TodayActivity = lazy(() => import('../pages/TodayActivity').then(m => ({ default: m.TodayActivity })));
 const BulletinBoard = lazy(() => import('../pages/BulletinBoard').then(m => ({ default: m.BulletinBoard })));
+const ShiftHandoff = lazy(() => import('../pages/ShiftHandoff').then(m => ({ default: m.ShiftHandoff })));
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { auth, isLoading } = useAuth();
@@ -94,6 +95,16 @@ export const router = createBrowserRouter([
       <Suspense fallback={<div className="loading">Loading...</div>}>
         <ProtectedRoute>
           <BulletinBoard />
+        </ProtectedRoute>
+      </Suspense>
+    )
+  },
+  {
+    path: '/handoff',
+    element: (
+      <Suspense fallback={<div className="loading">Loading...</div>}>
+        <ProtectedRoute>
+          <ShiftHandoff />
         </ProtectedRoute>
       </Suspense>
     )

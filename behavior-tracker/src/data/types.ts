@@ -96,3 +96,31 @@ export interface GoalProgress {
   notes?: string;
   calculated_at: string;
 }
+
+export interface ShiftHandoff {
+  id: string;
+  org_id: string;
+  shift_date: string;
+  shift_type: 'morning' | 'afternoon' | 'evening' | 'overnight';
+  created_by: string;
+  created_at: string;
+  staff_name: string;
+  staff_role: string;
+  summary: string;
+  client_updates: ClientUpdate[];
+  critical_alerts: string[];
+  medications_given: string[];
+  next_shift_tasks: string[];
+  general_notes?: string;
+  acknowledged_by?: string[];
+  acknowledged_at?: string[];
+}
+
+export interface ClientUpdate {
+  client_code: string;
+  client_name: string;
+  status: 'stable' | 'escalated' | 'improved' | 'monitoring';
+  notes: string;
+  follow_up_required: boolean;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+}
